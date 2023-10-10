@@ -26,12 +26,16 @@ io.on("connection", (client) => {
 			const players = Array.from(io.sockets.adapter.rooms.get(gameCode))
 			createGame(players, gameCode)
 			players.forEach((player) => {
-				const gameState = { playerMove: GAMES[gameCode].currentPlayer === player }
-				io.to(player).emit("ready", gameState)
+				const gameData = { playerMove: GAMES[gameCode].currentPlayer === player, gameCode }
+				io.to(player).emit("ready", gameData)
 			})
 			return
 		}
 		client.emit("wrong-code")
+	})
+
+	client.on("player-moved", (gameCode, moveTo) => {
+		io.to(GAMES[gameCode].nextPlayer).emit("opponent-moved", moveTo)
 	})
 })
 

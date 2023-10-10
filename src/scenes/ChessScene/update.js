@@ -1,3 +1,5 @@
+import socket from "../../socket"
+
 export default function update(gameState) {
 	// Handles endpoint rotation
 	this.endpoint.angle += 1
@@ -15,6 +17,7 @@ export default function update(gameState) {
 				gameState.moving = true
 				grp.clear(true)
 				gameState.movesOverlay = false
+				socket.emit("player-moved", gameState.gameCode, gameState.moveTo)
 			})
 			grp.add(moveSign)
 		})
