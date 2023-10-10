@@ -35,13 +35,20 @@ io.on("connection", (client) => {
 	})
 
 	client.on("player-moved", (gameCode, moveTo) => {
+		// Check if move sent by client is a valid move
+		const allValidMoves = getValidMoves(GAMES[gameCode].currentRookPosition)
+		if (!allValidMoves.includes(parseInt(moveTo))) return
+
+		// Let opponent know where player moved
 		io.to(GAMES[gameCode].nextPlayer).emit("opponent-moved", moveTo)
 
 		// Swap players
 		const temp = GAMES[gameCode].nextPlayer
 		GAMES[gameCode].nextPlayer = GAMES[gameCode].currentPlayer
 		GAMES[gameCode].currentPlayer = temp
+		GAMES[gameCode].currentRookPosition = moveTo
 
+		// Flip player chance
 		const players = Array.from(io.sockets.adapter.rooms.get(gameCode))
 		players.forEach((player) => {
 			const gameData = { playerMove: GAMES[gameCode].currentPlayer === player }
@@ -56,6 +63,25 @@ function createGame(players, gameCode) {
 		nextPlayer: players[1],
 		currentRookPosition: 8,
 	}
+}
+
+function getValidMoves(currentPosition) {
+	const validMoves = []
+
+	// Valid left postions
+	for (let i = currentPosition - 1; i <= 64; i--) {
+		if (i < 1) break
+		if (i % 8 === 0) {
+			break
+		}
+		validMoves.push(i)
+	}
+
+	// Valid down postions
+	for (let i = currentPosition + 8; i <= 64; i += 8) {
+		validMoves.push(i)
+	}
+	return validMoves
 }
 
 server.listen(3000, () => {

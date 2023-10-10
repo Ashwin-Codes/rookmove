@@ -36,6 +36,7 @@ export default function create(gameState) {
 
 	// Pointers
 	this.rook.on("pointerdown", function (ptr) {
+		if (gameState.moving) return
 		if (gameState.playerMove) {
 			gameState.validMoves = getValidMoves(gameState.currentPosition)
 		}

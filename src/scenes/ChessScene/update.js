@@ -17,6 +17,8 @@ export default function update(gameState) {
 				gameState.moving = true
 				grp.clear(true)
 				gameState.movesOverlay = false
+				clearTimeout(this.timer)
+				console.log("Timer Cleared")
 				socket.emit("player-moved", gameState.gameCode, gameState.moveTo)
 			})
 			grp.add(moveSign)
@@ -39,6 +41,12 @@ export default function update(gameState) {
 			gameState.moving = false
 			gameState.currentPosition = updatePos.chessSquare
 			console.log("Done moving !", gameState)
+
+			if (gameState.playerMove) {
+				this.timer = setTimeout(() => {
+					socket.emit("lost-time", gameState.gameCode)
+				}, 30 * 1000)
+			}
 		}
 	}
 }

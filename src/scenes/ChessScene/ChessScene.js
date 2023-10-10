@@ -20,11 +20,17 @@ const gameState = {
 ChessScene.preload = preload.bind(ChessScene, gameState)
 ChessScene.create = create.bind(ChessScene, gameState)
 ChessScene.update = update.bind(ChessScene, gameState)
+ChessScene.timer = null
 
 // Socket events to manipulate gameState
 socket.on("ready", (payload) => {
 	gameState.gameCode = payload.gameCode
 	gameState.playerMove = payload.playerMove
+	if (gameState.playerMove) {
+		ChessScene.timer = setTimeout(() => {
+			socket.emit("lost-time")
+		}, 30 * 1000)
+	}
 	socket.off("ready")
 })
 
