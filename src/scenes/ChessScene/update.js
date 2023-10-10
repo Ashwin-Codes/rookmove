@@ -25,7 +25,6 @@ export default function update(gameState) {
 	if (gameState.moveTo && gameState.moving) {
 		const currPos = { x: this.rook.x, y: this.rook.y }
 		const updatePos = getRenderPosition(gameState.moveTo, { x: 6, y: 5.5 })
-		console.log(currPos.x, updatePos.x)
 		if (currPos.x > updatePos.x) {
 			this.rook.x -= 1
 		}
