@@ -1,4 +1,4 @@
-export default function create() {
+export default function create(gameState) {
 	// Grid
 	const gridTop = this.add.sprite(0, 0, "grid")
 	gridTop.setOrigin(0, 0)
@@ -39,6 +39,27 @@ export default function create() {
 
 	// Pointers
 	this.rook.on("pointerdown", function (ptr) {
-		console.log(ptr)
+		if (gameState.playerMove) {
+			gameState.validMoves = getValidMoves(gameState.currentPosition)
+		}
 	})
+}
+
+function getValidMoves(currentPosition) {
+	const validMoves = []
+
+	// Valid left postions
+	for (let i = currentPosition - 1; i <= 64; i--) {
+		if (i < 1) break
+		if (i % 8 === 0) {
+			break
+		}
+		validMoves.push(i)
+	}
+
+	// Valid down postions
+	for (let i = currentPosition + 8; i <= 64; i += 8) {
+		validMoves.push(i)
+	}
+	return validMoves
 }
