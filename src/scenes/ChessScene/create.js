@@ -1,17 +1,4 @@
-import Phaser from "phaser"
-import grid from "../assets/grid.png"
-import rook from "../assets/player-idle.png"
-import endpoint from "../assets/end.png"
-
-const ChessScene = new Phaser.Scene()
-ChessScene.preload = function () {
-	this.load.image("player", rook)
-	this.load.image("endpoint", endpoint)
-	this.load.image("grid", grid)
-	this.load.image("gridBottom", grid)
-}
-
-ChessScene.create = function () {
+export default function create() {
 	// Grid
 	const gridTop = this.add.sprite(0, 0, "grid")
 	gridTop.setOrigin(0, 0)
@@ -55,8 +42,3 @@ ChessScene.create = function () {
 		console.log(ptr)
 	})
 }
-ChessScene.update = function () {
-	this.endpoint.angle += 1
-}
-
-export default ChessScene

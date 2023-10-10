@@ -1,5 +1,5 @@
 import Phaser from "phaser"
-import ChessScene from "./scenes/ChessScene"
+import ChessScene from "./scenes/ChessScene/ChessScene"
 
 const config = {
 	type: Phaser.AUTO,
