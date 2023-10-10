@@ -24,16 +24,13 @@ export default function create(gameState) {
 	}
 
 	// Rook
-	const boxSize = 40
-	const padding = 20
-	const verticalBoxGap = 4
-	const toCenter = { x: 6, y: 5.5 }
-	this.rook = this.add
-		.sprite(7 * boxSize + padding + toCenter.x, 0 + verticalBoxGap * boxSize + toCenter.y, "player")
-		.setInteractive()
+	const pos = getRenderPosition(8, { x: 6, y: 5.5 })
+	this.rook = this.add.sprite(pos.x, pos.y, "player").setInteractive()
 	this.rook.setOrigin(0, 0)
 
 	// Endpoint
+	const boxSize = 40
+	const padding = 20
 	this.endpoint = this.add.sprite(padding + 22, 12 * boxSize - 18, "endpoint")
 	this.endpoint.setOrigin(0.5, 0.5)
 
@@ -62,4 +59,20 @@ function getValidMoves(currentPosition) {
 		validMoves.push(i)
 	}
 	return validMoves
+}
+
+function getRenderPosition(chessSquare, centerPadding) {
+	if (!centerPadding) {
+		centerPadding = {
+			x: 0,
+			y: 0,
+		}
+	}
+	const size = 40
+	const padding = 20
+	const verticalGap = 4
+	let x = padding + ((chessSquare - 1) % 8) * size + centerPadding.x
+	let y = verticalGap * size + parseInt((chessSquare - 1) / 8) * size + centerPadding.y
+
+	return { x, y }
 }
