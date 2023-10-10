@@ -1,3 +1,4 @@
+import { setWinnerUI } from "../../initUI"
 import socket from "../../socket"
 
 export default function update(gameState) {
@@ -42,10 +43,14 @@ export default function update(gameState) {
 			gameState.currentPosition = updatePos.chessSquare
 			console.log("Done moving !", gameState)
 
-			if (gameState.playerMove) {
+			if (gameState.playerMove && !gameState.gameEnd) {
 				this.timer = setTimeout(() => {
 					socket.emit("lost-time", gameState.gameCode)
-				}, 30 * 1000)
+				}, 10 * 1000)
+			}
+
+			if (gameState.gameEnd) {
+				setWinnerUI(gameState.isWinner)
 			}
 		}
 	}

@@ -41,16 +41,42 @@ function initUI() {
 	socket.on("ready", () => {
 		backdrop.remove()
 	})
+
+	socket.on("time-win", (winnerId) => {
+		let isWinner = false
+		if (winnerId === socket.id) {
+			isWinner = true
+		}
+		if (this?.timer) {
+			clearTimeout(this.timer)
+		}
+		backdrop.innerHTML = timeWinnerUI(isWinner)
+		document.body.appendChild(backdrop)
+	})
 }
 
 function createGame() {
 	socket.emit("create-game")
 	socket.on("game-created", (gameCode) => {
-		console.log(gameCode)
 		const modal = document.querySelector(".modal")
 		modal.innerHTML = createdGameUI(gameCode)
 		socket.off("game-created")
 	})
+}
+
+function timeWinnerUI(isWinner) {
+	if (isWinner) {
+		return `
+		<div class="modal">
+			<h1>You Won On Time !</h1>
+		</div>
+		`
+	}
+	return `
+	<div class="modal">
+		<h1>You Lost On Time !</h1>
+	</div>
+	`
 }
 
 function createdGameUI(roomCode) {
@@ -65,6 +91,23 @@ function joinGame() {
 	const roomCode = input.value
 	if (!roomCode) return
 	socket.emit("join-game", roomCode)
+}
+
+export function setWinnerUI(isWinner) {
+	const winUI = `
+	<div class="modal">
+		<h1>You Won !</h1>
+	</div>
+	`
+	const lostUI = `
+	<div class="modal">
+		<h1>You Lost !</h1>
+	</div>
+	`
+	const backdrop = document.createElement("div")
+	backdrop.classList.add("backdrop")
+	backdrop.innerHTML = isWinner ? winUI : lostUI
+	document.body.appendChild(backdrop)
 }
 
 export default initUI

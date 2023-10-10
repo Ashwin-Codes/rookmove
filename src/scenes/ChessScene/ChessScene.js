@@ -15,6 +15,8 @@ const gameState = {
 	moveTo: 8,
 	moving: false,
 	movesOverlay: false,
+	gameEnd: false,
+	isWinner: null,
 }
 
 ChessScene.preload = preload.bind(ChessScene, gameState)
@@ -28,8 +30,8 @@ socket.on("ready", (payload) => {
 	gameState.playerMove = payload.playerMove
 	if (gameState.playerMove) {
 		ChessScene.timer = setTimeout(() => {
-			socket.emit("lost-time")
-		}, 30 * 1000)
+			socket.emit("lost-time", gameState.gameCode)
+		}, 10 * 1000)
 	}
 	socket.off("ready")
 })
@@ -42,4 +44,12 @@ socket.on("opponent-moved", (moveTo) => {
 socket.on("ready-next-move", (move) => {
 	gameState.playerMove = move.playerMove
 })
+
+socket.on("win", (winnerId) => {
+	console.log("Winner : ", winnerId === socket.id)
+	gameState.gameEnd = true
+	gameState.isWinner = winnerId === socket.id
+	clearInterval(ChessScene?.timer)
+})
+
 export default ChessScene

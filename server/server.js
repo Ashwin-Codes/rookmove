@@ -39,6 +39,12 @@ io.on("connection", (client) => {
 		const allValidMoves = getValidMoves(GAMES[gameCode].currentRookPosition)
 		if (!allValidMoves.includes(parseInt(moveTo))) return
 
+		// Check if won
+		if (parseInt(moveTo) === 57) {
+			console.log(GAMES[gameCode], GAMES[gameCode].currentPlayer)
+			io.to(gameCode).emit("win", GAMES[gameCode].currentPlayer)
+		}
+
 		// Let opponent know where player moved
 		io.to(GAMES[gameCode].nextPlayer).emit("opponent-moved", moveTo)
 
@@ -54,6 +60,12 @@ io.on("connection", (client) => {
 			const gameData = { playerMove: GAMES[gameCode].currentPlayer === player }
 			io.to(player).emit("ready-next-move", gameData)
 		})
+	})
+
+	client.on("lost-time", (gameCode) => {
+		if (!gameCode) return
+		const winner = GAMES[gameCode].nextPlayer
+		io.to(gameCode).emit("time-win", winner)
 	})
 })
 
