@@ -36,6 +36,17 @@ io.on("connection", (client) => {
 
 	client.on("player-moved", (gameCode, moveTo) => {
 		io.to(GAMES[gameCode].nextPlayer).emit("opponent-moved", moveTo)
+
+		// Swap players
+		const temp = GAMES[gameCode].nextPlayer
+		GAMES[gameCode].nextPlayer = GAMES[gameCode].currentPlayer
+		GAMES[gameCode].currentPlayer = temp
+
+		const players = Array.from(io.sockets.adapter.rooms.get(gameCode))
+		players.forEach((player) => {
+			const gameData = { playerMove: GAMES[gameCode].currentPlayer === player }
+			io.to(player).emit("ready-next-move", gameData)
+		})
 	})
 })
 

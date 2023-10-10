@@ -33,4 +33,7 @@ socket.on("opponent-moved", (moveTo) => {
 	gameState.moving = true
 })
 
+socket.on("ready-next-move", (move) => {
+	gameState.playerMove = move.playerMove
+})
 export default ChessScene
