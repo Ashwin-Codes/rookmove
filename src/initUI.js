@@ -1,3 +1,5 @@
+import socket from "./socket"
+
 function initUI() {
 	const backdrop = document.createElement("div")
 
@@ -9,6 +11,7 @@ function initUI() {
 	</div>
 	`
 	document.body.appendChild(backdrop)
+	console.log(socket)
 }
 
 export default initUI
