@@ -1,4 +1,6 @@
-const app = require("express")()
+const express = require("express")
+const app = express()
+const path = require("path")
 const server = require("http").createServer(app)
 const { Server: Socket } = require("socket.io")
 const { v4: uuid } = require("uuid")
@@ -8,6 +10,12 @@ const io = new Socket(server, {
 })
 
 const GAMES = {}
+
+// Host client
+app.use(express.static(path.resolve("../dist")))
+app.get("/*", (req, res) => {
+	res.sendFile(path.resolve("../dist", "index.html"))
+})
 
 io.on("connection", (client) => {
 	client.on("create-game", () => {
