@@ -1,4 +1,6 @@
-import socket from "./socket"
+import socket from "../socket"
+import timeWinnerUI from "./timeWinnerUI"
+import createdGameUI from "./createdGameUI"
 
 function initUI() {
 	const backdrop = document.createElement("div")
@@ -64,50 +66,11 @@ function createGame() {
 	})
 }
 
-function timeWinnerUI(isWinner) {
-	if (isWinner) {
-		return `
-		<div class="modal">
-			<h1>You Won On Time !</h1>
-		</div>
-		`
-	}
-	return `
-	<div class="modal">
-		<h1>You Lost On Time !</h1>
-	</div>
-	`
-}
-
-function createdGameUI(roomCode) {
-	return `
-	<h1>Waiting for Player 2</h1>
-	Game Code: ${roomCode}
-	`
-}
-
 function joinGame() {
 	const input = document.querySelector(".join-game-input")
 	const roomCode = input.value
 	if (!roomCode) return
 	socket.emit("join-game", roomCode)
-}
-
-export function setWinnerUI(isWinner) {
-	const winUI = `
-	<div class="modal">
-		<h1>You Won !</h1>
-	</div>
-	`
-	const lostUI = `
-	<div class="modal">
-		<h1>You Lost !</h1>
-	</div>
-	`
-	const backdrop = document.createElement("div")
-	backdrop.classList.add("backdrop")
-	backdrop.innerHTML = isWinner ? winUI : lostUI
-	document.body.appendChild(backdrop)
 }
 
 export default initUI

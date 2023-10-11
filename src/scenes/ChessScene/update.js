@@ -1,4 +1,4 @@
-import { setWinnerUI } from "../../initUI"
+import setWinnerUI from "../../ui/setWinnerUI"
 import socket from "../../socket"
 
 export default function update(gameState) {
