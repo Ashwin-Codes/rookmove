@@ -6,7 +6,7 @@ export default function setWinnerUI(isWinner) {
 	`
 	const lostUI = `
 	<div class="modal">
-		<h1>You Lost !</h1>
+		<h1 style="color:red">You Lost !</h1>
 	</div>
 	`
 	const backdrop = document.createElement("div")
