@@ -34,6 +34,34 @@ export default function create(gameState) {
 	this.endpoint = this.add.sprite(padding + 22, 12 * boxSize - 18, "endpoint")
 	this.endpoint.setOrigin(0.5, 0.5)
 
+	// Avatars
+	const playerAvatar = this.add.sprite(160, 568, "playeravatar")
+	playerAvatar.setOrigin(0, 0)
+	const opponentAvatar = this.add.sprite(155, 32, "opponentavatar")
+	opponentAvatar.setOrigin(0, 0)
+
+	this.playerLoader = this.add.rexCircularProgress({
+		x: 155,
+		y: 563,
+		radius: 28,
+		trackColor: 0x2a2a2a,
+		barColor: 0x3dd771,
+		value: 0.0,
+	})
+	this.playerLoader.setOrigin(0, 0)
+	this.playerLoader.alpha = 1
+
+	this.opponentLoader = this.add.rexCircularProgress({
+		x: 150,
+		y: 27,
+		radius: 25,
+		trackColor: 0x2a2a2a,
+		barColor: 0x3dd771,
+		value: 0.0,
+	})
+	this.opponentLoader.setOrigin(0, 0)
+	this.opponentLoader.alpha = 1
+
 	// Pointers
 	this.rook.on("pointerdown", function (ptr) {
 		if (gameState.moving) return

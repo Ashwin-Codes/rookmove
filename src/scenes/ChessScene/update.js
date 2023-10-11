@@ -2,6 +2,27 @@ import setWinnerUI from "../../ui/setWinnerUI"
 import socket from "../../socket"
 
 export default function update(gameState) {
+	// Handle loader visibility
+	if (gameState.playerMove) {
+		this.opponentLoader.alpha = 0
+		this.playerLoader.alpha = 1
+
+		// Update loader every second
+		this.playerLoader.value = gameState.loader / 30
+	} else {
+		this.opponentLoader.alpha = 1
+		this.playerLoader.alpha = 0
+
+		// Update loader every second
+		this.opponentLoader.value = gameState.loader / 30
+	}
+
+	// Check if time is up
+	if (gameState.playerMove && gameState.loader >= 30 && !gameState.gameEnd) {
+		gameState.gameEnd = true
+		socket.emit("lost-time", gameState.gameCode)
+	}
+
 	// Handles endpoint rotation
 	this.endpoint.angle += 1
 
@@ -18,9 +39,18 @@ export default function update(gameState) {
 				gameState.moving = true
 				grp.clear(true)
 				gameState.movesOverlay = false
-				clearTimeout(this.timer)
-				console.log("Timer Cleared")
 				socket.emit("player-moved", gameState.gameCode, gameState.moveTo)
+
+				// Restart timer
+				clearInterval(this?.timer)
+				gameState.loader = 0
+				this.timer = setInterval(() => {
+					if (gameState.loader === 30) {
+						clearInterval(this?.timer)
+						return
+					}
+					gameState.loader += 1
+				}, 1000)
 			})
 			grp.add(moveSign)
 		})
@@ -41,14 +71,6 @@ export default function update(gameState) {
 		if (currPos.x === updatePos.x && currPos.y === updatePos.y) {
 			gameState.moving = false
 			gameState.currentPosition = updatePos.chessSquare
-			console.log("Done moving !", gameState)
-
-			if (gameState.playerMove && !gameState.gameEnd) {
-				this.timer = setTimeout(() => {
-					socket.emit("lost-time", gameState.gameCode)
-				}, 10 * 1000)
-			}
-
 			if (gameState.gameEnd) {
 				setWinnerUI(gameState.isWinner)
 			}
