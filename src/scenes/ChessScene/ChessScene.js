@@ -34,7 +34,7 @@ socket.on("ready", (payload) => {
 	gameState.loader = 0
 	ChessScene.timer = setInterval(() => {
 		if (gameState.loader === 30) {
-			clearInterval(ChessScene.timer)
+			clearInterval(ChessScene?.timer)
 			return
 		}
 		gameState.loader += 1
@@ -51,7 +51,7 @@ socket.on("opponent-moved", (moveTo) => {
 	gameState.loader = 0
 	ChessScene.timer = setInterval(() => {
 		if (gameState.loader === 30) {
-			clearInterval(ChessScene.timer)
+			clearInterval(ChessScene?.timer)
 			return
 		}
 		gameState.loader += 1
@@ -63,7 +63,6 @@ socket.on("ready-next-move", (move) => {
 })
 
 socket.on("win", (winnerId) => {
-	console.log("Winner : ", winnerId === socket.id)
 	gameState.gameEnd = true
 	gameState.isWinner = winnerId === socket.id
 	clearInterval(ChessScene?.timer)

@@ -10,11 +10,8 @@ const io = new Socket(server, {
 const GAMES = {}
 
 io.on("connection", (client) => {
-	console.log("User connected: ", client.id)
-
 	client.on("create-game", () => {
 		const roomName = uuid().split("-")[0]
-		console.log("Roomname is :", roomName)
 		client.join(roomName)
 		client.emit("game-created", roomName)
 	})
@@ -41,7 +38,6 @@ io.on("connection", (client) => {
 
 		// Check if won
 		if (parseInt(moveTo) === 57) {
-			console.log(GAMES[gameCode], GAMES[gameCode].currentPlayer)
 			io.to(gameCode).emit("win", GAMES[gameCode].currentPlayer)
 		}
 

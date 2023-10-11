@@ -4,5 +4,3 @@ import initUI from "./src/ui/initUI"
 
 // Initialize UI
 initUI()
-
-console.log(Phaser)
