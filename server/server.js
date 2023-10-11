@@ -22,12 +22,24 @@ io.on("connection", (client) => {
 		const roomName = uuid().split("-")[0]
 		client.join(roomName)
 		client.emit("game-created", roomName)
+		client.gameCode = roomName
+	})
+
+	client.on("disconnect", () => {
+		if (client.gameCode) {
+			let winnerId = GAMES[client.gameCode].currentPlayer
+			if (GAMES[client.gameCode].currentPlayer === client.id) {
+				winnerId = GAMES[client.gameCode].nextPlayer
+			}
+			io.to(client.gameCode).emit("win", winnerId)
+		}
 	})
 
 	client.on("join-game", (gameCode) => {
 		const roomExists = io.sockets.adapter.rooms.has(gameCode)
 		if (roomExists) {
 			client.join(gameCode)
+			client.gameCode = gameCode
 			const players = Array.from(io.sockets.adapter.rooms.get(gameCode))
 			createGame(players, gameCode)
 			players.forEach((player) => {
